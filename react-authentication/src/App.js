@@ -1,87 +1,37 @@
-import { useForm } from 'react-hook-form';
-import { Switch, Route, Link, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 import { UserContext } from './store';
 import useAuthentication from './hooks/useAuthentication';
+import NavBar from './components/NavBar'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
-// Esta es la forma del objeto user cuando estamos logeados
-// {
-//   email: '',
-//   password: '',
-//   username: '',
-//   id: null,
-// }
 function App() {
-  const { user, login } = useAuthentication();
-  const { handleSubmit, register } = useForm();
-
-  const handleFormSubmit = (formValues) => {
-    login(formValues.email, formValues.password);
-  };
-
-  // Lo comentamos porque es un GET para probar como funciona axios
-  // useEffect(() => {
-  //   axios
-  //     .get(API_URL)
-  //     // Como el objeto response tiene la propiedad data, la destructuramos
-  //     // .then((response) => {
-  //     .then(({ data }) => {
-  //       console.log(data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  const { user, login, signup, logout } = useAuthentication();
 
   return (
-    <UserContext.Provider value={{ user, login }}>
-      <div className="App">
+    <UserContext.Provider value={{ user, login, signup, logout }}>
+      <div className='App'>
+        <NavBar />
         <Switch>
-          <Route path="/profile" exact>
-            {user ? (
-              <h1>Bienvenid@ a mi App! {user.username}</h1>
-            ) : (
-              <Redirect to="/login" />
-            )}
+          <Route path='/profile' exact>
+            <Profile />
           </Route>
 
-          <Route path="/login" exact>
-            {user ? (
-              <Redirect to="/profile" />
-            ) : (
-              <>
-                <h2>Iniciar sesión!</h2>
-                <form onSubmit={handleSubmit(handleFormSubmit)}>
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    ref={register({ required: true })}
-                  />
-                  <br />
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    ref={register({ required: true })}
-                  />
-                  <br />
-                  <button type="submit">¡Enviar! 🚀</button>
-                </form>
-              </>
-            )}
+          <Route path='/login' exact>
+            <Login />
           </Route>
 
-          <Route path="/" exact>
-            <h1>Bienvenid@ a The Bridge Auth</h1>
+          <Route path='/signup' exact>
+            <SignUp />
+          </Route>
 
-            <nav>
-              <Link to="/login">Iniciar sesión</Link>
-              <Link to="/">Registrarme</Link> {/* Completar... */}
-            </nav>
+          <Route path='/' exact>
+            <Home />
           </Route>
         </Switch>
       </div>

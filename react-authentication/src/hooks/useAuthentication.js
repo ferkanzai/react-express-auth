@@ -6,21 +6,32 @@ const API_URL = 'http://localhost:4000';
 export default function useAuthentication() {
   const [user, setUser] = useState(null);
 
-  function login(email, password) {
-    axios
-      .post(`${API_URL}/auth/login`, { email, password })
-      .then((res) => {
-        setUser(res.data.data);
-      })
-      .catch((err) => {
-        console.log('Login error:', err);
-      });
+  async function login(email, password, errorCb) {
+    try {
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+      setUser(res.data.data);
+    } catch (err) {
+      errorCb(err.response.data);
+    }
   }
 
-  // Añadir aquí la lógica de gestión de auth y user. (register, logout...)
+  async function signup(email, password, errorCb) {
+    try {
+      const res = await axios.post(`${API_URL}/auth/signup`, { email, password });
+      setUser(res.data.data);
+    } catch (err) {
+      errorCb(err.response.data);
+    }
+  }
+
+  function logout() {
+    setUser(null);
+  }
 
   return {
     user,
     login,
+    signup,
+    logout,
   };
 }

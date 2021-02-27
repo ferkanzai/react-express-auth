@@ -34,13 +34,41 @@ const router = express.Router();
 router.get('/', (req, res) => res.status(200).json({ data: 'Server alive!' }));
 
 router.post('/auth/login', (req, res, next) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const foundUser = users.find((user) => {
-    return user.password === password && user.email === email;
-  });
+    const foundUser = users.find((user) => {
+      return user.password === password && user.email === email;
+    });
 
-  res.status(200).json({ data: foundUser });
+    if (!foundUser) throw new Error('Bad credentials');
+
+    res.status(200).json({ data: foundUser });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
+router.post('/auth/signup', (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (users.find((user) => user.email === email)) throw new Error('Email already in use');
+
+    const newUser = {
+      email,
+      password,
+      username: `${email.split('@')[0]} user`,
+      id: users.length + 1,
+    };
+
+    const addUser = users.push(newUser);
+
+    res.status(201).json({ data: newUser });
+  } catch (err) {
+    console.error(err);
+    res.status(400).send(err.message );
+  }
 });
 
 app.use('/', router);
