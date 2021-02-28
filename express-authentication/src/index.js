@@ -59,7 +59,7 @@ router.post('/auth/login', async (req, res, next) => {
 
     res.status(200).json({ data: foundUser, token });
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(401).send(err.message);
   }
 });
 
