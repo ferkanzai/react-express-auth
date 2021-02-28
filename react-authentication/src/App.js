@@ -1,5 +1,4 @@
 import { Switch, Route } from 'react-router-dom';
-
 import { UserContext } from './store';
 import useAuthentication from './hooks/useAuthentication';
 import NavBar from './components/NavBar'
@@ -9,12 +8,13 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 function App() {
-  const { user, login, signup, logout } = useAuthentication();
+  const { user, login, signup, logout, getProfile, loading } = useAuthentication();
 
   return (
-    <UserContext.Provider value={{ user, login, signup, logout }}>
+    <UserContext.Provider value={{ user, login, signup, logout, getProfile, loading }}>
       <div className='App'>
         <NavBar />
         <Switch>
