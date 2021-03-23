@@ -27,7 +27,8 @@ export default function useAuthentication() {
     }
   }
 
-  async function getProfile(token, errorCb) {
+  async function getProfile(token) {
+    setLoading(true)
     const config = {
       headers: {
         authorization: `Bearer ${token}`,
@@ -37,7 +38,7 @@ export default function useAuthentication() {
       const res = await axios.get(`${API_URL}/auth/profile`, config)
       setUser(res.data.data)
     } catch (err) {
-      errorCb(err.response.data)
+      console.error(err.response.data)
     } finally {
       setLoading(false)
     }
@@ -55,5 +56,6 @@ export default function useAuthentication() {
     logout,
     getProfile,
     loading,
+    setLoading,
   };
 }

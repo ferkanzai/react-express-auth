@@ -11,10 +11,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 function App() {
-  const { user, login, signup, logout, getProfile, loading } = useAuthentication();
+  const { user, login, signup, logout, getProfile, loading, setLoading } = useAuthentication();
 
   return (
-    <UserContext.Provider value={{ user, login, signup, logout, getProfile, loading }}>
+    <UserContext.Provider value={{ user, login, signup, logout, getProfile, loading, setLoading }}>
       <div className='App'>
         <NavBar />
         <Switch>
